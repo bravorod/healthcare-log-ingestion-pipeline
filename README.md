@@ -37,4 +37,4 @@ While simplified, this pipeline mimics the ingestion workflows used in healthcar
 
 ## 🚧 Disclaimer
 
-This repo is a demonstration project and does **not** include real PHI or production configurations. All data, credentials, and schemas are synthetic and for educational purposes only.
+This repo is a demonstration project and does **not** include real PHI or production configurations.
