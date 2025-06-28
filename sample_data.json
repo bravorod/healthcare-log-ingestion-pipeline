@@ -1,0 +1,14 @@
+
+[
+  {
+    "event_id": "evt001",
+    "patient_id": "pat123",
+    "device_id": "dev456",
+    "timestamp": "2025-06-28T14:22:00Z",
+    "payload": {
+      "heart_rate": 88,
+      "blood_pressure": "120/80",
+      "notes": "Routine check"
+    }
+  }
+]
