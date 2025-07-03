@@ -2,7 +2,7 @@
 
 This project showcases a simplified data ingestion pipeline designed for streaming and batch processing of healthcare-related event logs. It simulates an end-to-end architecture for ingesting semi-structured JSON data from a Kafka topic, processing it with Prefect, and loading it into a Snowflake data warehouse.
 
-## 🧰 Technologies Used
+## Technologies Used
 
 - **Python** – core language for pipeline logic and orchestration
 - **Kafka** – source system for streaming JSON logs
@@ -11,7 +11,7 @@ This project showcases a simplified data ingestion pipeline designed for streami
 - **JSON** – format for raw event data
 - **SQL** – used for schema creation and transformation logic
 
-## 📂 Project Structure
+## Project Structure
 
 | File | Description |
 |------|-------------|
@@ -31,10 +31,7 @@ This project showcases a simplified data ingestion pipeline designed for streami
    - Loads records into a Snowflake staging table
 3. **Storage**: Snowflake holds the ingested data in both raw and transformed forms for downstream analytics.
 
-## 🔍 Use Case
+## Use Case
 
 While simplified, this pipeline mimics the ingestion workflows used in healthcare environments where logs from electronic health records (EHR), SIEMs, or transactional systems must be processed reliably and securely for analytics and compliance monitoring.
 
-## 🚧 Disclaimer
-
-This repo is a demonstration project and does **not** include real PHI or production configurations.
