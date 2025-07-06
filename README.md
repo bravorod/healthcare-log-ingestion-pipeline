@@ -22,7 +22,7 @@ This project showcases a simplified data ingestion pipeline designed for streami
 | `snowflake_schema.sql` | SQL DDL script to create staging and analytics-ready tables |
 | `README.md` | Project documentation |
 
-## ⚙️ Pipeline Overview
+## Pipeline Overview
 
 1. **Data Source**: Simulated healthcare events are produced into a Kafka topic.
 2. **Processing**: Prefect orchestrates a Python ETL flow which:
