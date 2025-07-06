@@ -6,7 +6,7 @@ import joblib
 import numpy as np
 import os
 
-# Load ML model 
+# Load pre-trained ML model
 MODEL_PATH = "ml_model/severity_predictor.pkl"
 model = joblib.load(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
 
@@ -21,30 +21,19 @@ def enrich_event(event: dict) -> dict:
     return event
 
 def generate_ml_features(event: dict) -> list:
-    # Extract meaningful features from event
-    timestamp = event.get("timestamp", "")
-    event_time = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S") if timestamp else datetime.utcnow()
-    hour_of_day = event_time.hour
-    
-    event_type = event.get("event_type", "UNKNOWN")
-    type_encoded = {
-        "VITAL_SIGNS": 1,
-        "LAB_RESULT": 2,
-        "PRESCRIPTION": 3,
-        "ADMISSION": 4,
-        "DISCHARGE": 5
-    }.get(event_type, 0)
-
-    department_length = len(event.get("department", ""))
-    notes_length = len(event.get("notes", ""))
-    is_critical = 1 if "critical" in event.get("notes", "").lower() else 0
-    
+    # Create a numeric feature vector from event data
     return [
-        hour_of_day,
-        type_encoded,
-        department_length,
-        notes_length,
-        is_critical
+        float(event.get("heart_rate", 0)),
+        float(event.get("spo2", 0)),
+        float(event.get("sbp", 0)),
+        float(event.get("dbp", 0)),
+        float(event.get("temp_c", 0)),
+        float(event.get("wbc_count", 0)),
+        float(event.get("hemoglobin", 0)),
+        float(event.get("platelets", 0)),
+        len(str(event.get("notes", ""))),
+        1 if event.get("event_type") == "VITAL_SIGNS" else 0,
+        1 if event.get("event_type") == "LAB_RESULT" else 0
     ]
 
 def predict_event_severity(event: dict) -> float:
