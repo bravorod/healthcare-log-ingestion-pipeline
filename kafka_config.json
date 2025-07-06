@@ -1,5 +1,0 @@
-{
-  "bootstrap.servers": "localhost:9092",
-  "group.id": "healthcare-log-pipeline",
-  "topics": ["ehr-logs", "device-events"]
-}
