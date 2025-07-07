@@ -1,6 +1,5 @@
-pandas
-scikit-learn
-joblib
-kafka-python
-prefect
-numpy
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.4.2
+joblib==1.4.2
+kafka-python==2.0.2

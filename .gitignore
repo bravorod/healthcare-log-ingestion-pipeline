@@ -1,0 +1,27 @@
+# Python virtual environment
+venv/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Kafka installation via Homebrew or tar
+/opt/homebrew/Cellar/kafka/
+/opt/homebrew/opt/kafka/
+/usr/local/Cellar/kafka/
+/usr/local/opt/kafka/
+/kafka*/        # If Kafka is downloaded as a tar and unpacked
+
+# Kafka logs
+/kafka-logs/
+/zookeeper-logs/
+/logs/
+
+# OS metadata
+.DS_Store
+
+# IDE configs
+.vscode/
+.idea/

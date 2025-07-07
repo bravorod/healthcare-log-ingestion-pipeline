@@ -15,37 +15,37 @@ os.makedirs("ml_model", exist_ok=True)
 
 def load_and_prepare_data(path):
     df = pd.read_csv(path)
-    
-    df["notes"] = df["notes"].fillna("").astype(str)
 
+    # Fill and engineer note features
+    df["notes"] = df["notes"].fillna("").astype(str)
     df["note_length"] = df["notes"].apply(len)
     df["num_words"] = df["notes"].apply(lambda x: len(x.split()))
     df["avg_word_length"] = df["notes"].apply(lambda x: sum(len(w) for w in x.split()) / len(x.split()) if x.split() else 0)
 
-    # New vitals/labs
-    df["has_lab"] = df["lab_result"].notna().astype(int)
-    df["has_vitals"] = df["heart_rate"].notna().astype(int)
-    
-    df["heart_rate"] = df["heart_rate"].fillna(df["heart_rate"].mean())
-    df["temperature"] = df["temperature"].fillna(df["temperature"].mean())
-    df["respiratory_rate"] = df["respiratory_rate"].fillna(df["respiratory_rate"].mean())
-    df["lab_result"] = df["lab_result"].fillna(df["lab_result"].mean())
+    # Handle vitals/labs from available columns
+    for col in ["heart_rate", "temperature", "systolic_bp", "diastolic_bp", "wbc_count", "hemoglobin"]:
+        if col in df.columns:
+            df[col] = df[col].fillna(df[col].mean())
+        else:
+            df[col] = 0
 
-    # Derived features
-    df["vitals_sum"] = df["heart_rate"] + df["temperature"] + df["respiratory_rate"]
-    df["vitals_range"] = df[["heart_rate", "temperature", "respiratory_rate"]].max(axis=1) - df[["heart_rate", "temperature", "respiratory_rate"]].min(axis=1)
+    df["has_notes"] = df["notes"].notna().astype(int)
+    df["bp_diff"] = df["systolic_bp"] - df["diastolic_bp"]
+    df["vitals_score"] = df["heart_rate"] + df["temperature"] + df["wbc_count"]
 
     # Categorical fields
-    df["department"] = df["department"].fillna("UNKNOWN")
-    df["event_type"] = df["event_type"].fillna("UNKNOWN")
+    df["gender"] = df["gender"].fillna("UNKNOWN")
+    df["admission_type"] = df["admission_type"].fillna("UNKNOWN")
 
     numeric_features = [
-        "note_length", "num_words", "avg_word_length", "has_lab", "has_vitals",
-        "heart_rate", "temperature", "respiratory_rate", "lab_result",
-        "vitals_sum", "vitals_range"
+        "note_length", "num_words", "avg_word_length", "heart_rate", "temperature",
+        "systolic_bp", "diastolic_bp", "wbc_count", "hemoglobin", "bp_diff",
+        "vitals_score"
     ]
+    categorical_features = ["gender", "admission_type"]
 
-    categorical_features = ["department", "event_type"]
+    if "severe" not in df.columns:
+        df["severe"] = ((df["heart_rate"] > 100) | (df["wbc_count"] > 12)).astype(int)
 
     features = df[numeric_features + categorical_features]
     labels = df["severe"]
