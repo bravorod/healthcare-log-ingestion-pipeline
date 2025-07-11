@@ -1,37 +1,59 @@
-# Healthcare Log Ingestion Pipeline
+# MIMIC EHR Severity Prediction Pipeline
 
-This project showcases a simplified data ingestion pipeline designed for streaming and batch processing of healthcare-related event logs. It simulates an end-to-end architecture for ingesting semi-structured JSON data from a Kafka topic, processing it with Prefect, and loading it into a Snowflake data warehouse.
+This project simulates real-time EHR data ingestion using synthetic MIMIC-IV patient data and applies a machine learning pipeline to classify patient severity. It includes an end-to-end system for data streaming, feature engineering, model training, prediction, and exporting results to Snowflake for downstream analytics and clinical decision support.
 
-## Technologies Used
+## Features
 
-- **Python** – core language for pipeline logic and orchestration
-- **Kafka** – source system for streaming JSON logs
-- **Prefect** – orchestration tool for DAG control and scheduling
-- **Snowflake** – cloud data warehouse used for storing normalized healthcare data
-- **JSON** – format for raw event data
-- **SQL** – used for schema creation and transformation logic
+- Real-time simulation of patient telemetry and note data
+- Feature engineering from clinical text and vitals/labs
+- Severity classification using Random Forest
+- Outputs augmented data streams to Snowflake
+- Modular and extensible pipeline for future model integration
 
-## Project Structure
+## Machine Learning Details
 
-| File | Description |
-|------|-------------|
-| `etl_pipeline.py` | Main ETL script for reading Kafka messages and writing to Snowflake |
-| `prefect_flow.py` | Prefect DAG definition for scheduling and orchestrating ETL jobs |
-| `kafka_config.json` | Sample Kafka config stub with placeholder credentials and topic metadata |
-| `sample_data.json` | Simulated input records containing healthcare event data |
-| `snowflake_schema.sql` | SQL DDL script to create staging and analytics-ready tables |
-| `README.md` | Project documentation |
+The model is a `RandomForestClassifier` trained on derived features including:
+- Text-derived statistics (note length, word count)
+- Vitals and lab values (e.g., heart rate, WBC count)
+- Categorical data (gender, admission type)
+- Engineered features (blood pressure difference, vitals score)
 
-## Pipeline Overview
+Labels are binary (`severe` vs. `non-severe`) based on thresholding heuristics.
 
-1. **Data Source**: Simulated healthcare events are produced into a Kafka topic.
-2. **Processing**: Prefect orchestrates a Python ETL flow which:
-   - Reads and parses Kafka messages (`sample_data.json`)
-   - Applies basic normalization and cleansing logic
-   - Loads records into a Snowflake staging table
-3. **Storage**: Snowflake holds the ingested data in both raw and transformed forms for downstream analytics.
+## File Structure
+
+```
+mimic-ehr-pipeline/
+├── data/                      # Input CSVs (vitals, labs, notes)
+├── ml_model/                  # Trained model artifacts (.pkl files)
+├── config.py                  # Configuration settings (Snowflake, thresholds)
+├── train_model.py             # Training pipeline for feature extraction and model fitting
+├── realtime_etl.py            # Simulates real-time ingestion + scoring
+└── utils.py                   # Helper functions (feature engineering)              
+```
+
 
 ## Use Case
+This script uses patient data to train a Random Forest model and serialize it to model.pkl. Ideal for data scientists and clinical engineers prototyping risk scoring models on real-time health data feeds.
 
-While simplified, this pipeline mimics the ingestion workflows used in healthcare environments where logs from electronic health records (EHR), SIEMs, or transactional systems must be processed reliably and securely for analytics and compliance monitoring.
+### Start Kafka locally or connect to your streaming service.
 
+```bash
+pip install -r requirements.txt
+python stream_producer.py
+```
+
+### Run the ETL + ML scoring pipeline:
+
+```bash
+python etl_pipeline.py
+```
+
+### Model Training 
+
+```bash
+python train_model.py #
+```
+
+## License
+This project is licensed under the MIT License.
